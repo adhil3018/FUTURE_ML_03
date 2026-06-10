@@ -1,7 +1,14 @@
 import spacy
 from spacy.matcher import PhraseMatcher
+import os
 
-nlp = spacy.load("en_core_web_sm")
+# Safe cloud-deployment loading trick
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    # If the cloud platform missed the download, force-pull it right now!
+    os.system("python -m spacy download en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 
 # Define our search parameters
 SKILL_DATABASE = [
